@@ -1,25 +1,36 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './App.css';
 import useRandomJoke from './useRandomJoke';
 
 function App() {
-   const joke = useRandomJoke('Eleni', 'Kotsiri');
+   // useRef, which points at nothing (null) when we initialize it.
+   const firstNameRef = useRef(null)
+   const lastNameRef = useRef(null)
 
-   const [firstName, setFirstName] = useState('');
-   const [lastName, setLastName] = useState('');
+
+   const [firstName, setFirstName] = useState('Eleni');
+   const [lastName, setLastName] = useState('Kotsiri');
+   
+   // custom hook
+   const joke = useRandomJoke(firstName, lastName);
+
 
    const generateJoke = (e) => {
       e.preventDefault();
+      setFirstName(firstNameRef.current.value);
+      setLastName(lastNameRef.current.value);
    }
 
    return (
       <div className="App">
-         <h1>Joke generator</h1>
+         <h1>Joke generator (grab something warm, they're bad)</h1>
+
          <form>
-            <input placeholder="First name" value={firstName} onChange = {(e) => setFirstName(e.target.value)} />
-            <input placeholder="Last name" value={lastName} onChange = {(e) => setLastName(e.target.value)} />
+            <input placeholder="First name" ref={firstNameRef} />
+            <input placeholder="Last name" ref={lastNameRef} />
             <button onClick={generateJoke}>Generate joke</button>
          </form>
+
          <p>{joke}</p>
       </div>
    );
